@@ -17,6 +17,11 @@ A journaling app for daily use and for those "aha" moments.
 - User can tag entry
   - User can filter entries based on tag.
 
+### Checkin Updates
+1. Added basic project setup and color assets
+1. Added app icon, name, launch screen
+1. Added stubs for all navigation screens
+
 ### Wireframes
 
 ![wireframst](/images/wirefram.png)
