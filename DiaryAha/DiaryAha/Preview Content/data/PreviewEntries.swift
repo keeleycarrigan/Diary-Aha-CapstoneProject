@@ -1,16 +1,14 @@
 //
-//  DiaryAhaApp.swift
+//  Entries.swift
 //  DiaryAha
 //
-//  Created by Keeley Carrigan on 10/5/24.
+//  Created by Keeley Carrigan on 10/17/24.
 //
 
-import SwiftUI
-import SwiftData
+import Foundation
 
-@main
-struct DiaryAhaApp: App {
-    let testEntries: [Entry] = [
+extension Entry {
+    static var previewEntries: [Entry] = [
         Entry(title: "First Entry", body: "Body", date: Date(), vibe: ""),
         Entry(title: "First Entry", body: "Body", date: Date(), vibe: ""),
         Entry(title: "First Entry", body: "Body", date: Date(), vibe: ""),
@@ -20,10 +18,4 @@ struct DiaryAhaApp: App {
         Entry(title: "First Entry", body: "Body", date: Date(), vibe: ""),
         Entry(title: "First Entry", body: "Body", date: Date(), vibe: "")
     ]
-
-    var body: some Scene {
-        WindowGroup {
-            EntryListView(entries: testEntries)
-        }
-    }
 }
