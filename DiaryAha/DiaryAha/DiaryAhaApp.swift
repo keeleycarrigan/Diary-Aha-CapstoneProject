@@ -10,20 +10,16 @@ import SwiftData
 
 @main
 struct DiaryAhaApp: App {
-    let testEntries: [Entry] = [
-        Entry(title: "First Entry", body: "Body", date: Date(), vibe: ""),
-        Entry(title: "First Entry", body: "Body", date: Date(), vibe: ""),
-        Entry(title: "First Entry", body: "Body", date: Date(), vibe: ""),
-        Entry(title: "First Entry", body: "Body", date: Date(), vibe: ""),
-        Entry(title: "First Entry", body: "Body", date: Date(), vibe: ""),
-        Entry(title: "First Entry", body: "Body", date: Date(), vibe: ""),
-        Entry(title: "First Entry", body: "Body", date: Date(), vibe: ""),
-        Entry(title: "First Entry", body: "Body", date: Date(), vibe: "")
-    ]
+    @StateObject private var entriesController: EntriesController
+
+    init() {
+        self._entriesController = .init(wrappedValue: EntriesController(Entry.previewEntries))
+    }
 
     var body: some Scene {
         WindowGroup {
-            EntryListView(entries: testEntries)
+            EntryListView()
+                .environmentObject(entriesController)
         }
     }
 }

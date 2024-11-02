@@ -28,7 +28,7 @@ struct AddEntryButtonView: View {
         .foregroundStyle(.white)
         .background(Color.freshBlue, in: .circle)
         .sheet(isPresented: $showNewEntry) {
-            EditEntryView()
+            EditEntryView(showNewEntry: $showNewEntry)
         }
     }
 }
