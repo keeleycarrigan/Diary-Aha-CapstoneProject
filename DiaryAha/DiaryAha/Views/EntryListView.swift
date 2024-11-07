@@ -8,13 +8,10 @@
 import SwiftUI
 
 struct EntryListView: View {
-    var entries: [Entry]
-    let columnCount: Int = 1
-    let gridSpacing: CGFloat = 10
+    @EnvironmentObject var entriesController: EntriesController
+    let entryColumns = Array(repeating: GridItem(.flexible(), spacing: 10.0), count: 1)
 
-    init(entries: [Entry]) {
-        self.entries = entries
-
+    init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.secondaryColor]
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.secondaryColor]
     }
@@ -22,9 +19,9 @@ struct EntryListView: View {
     var body: some View {
         NavigationStack {
             ScrollView(.vertical) {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: gridSpacing), count: columnCount), spacing: 20) {
+                LazyVGrid(columns: entryColumns, spacing: 20) {
 
-                    ForEach(entries) { entry in
+                    ForEach(entriesController.entries) { entry in
                         NavigationLink {
                             EntryDetailView(entry: entry)
                         } label: {
@@ -48,6 +45,6 @@ struct EntryListView: View {
 }
 
 #Preview {
-    EntryListView(entries: Entry.previewEntries)
+    EntryListView()
+        .environmentObject(EntriesController(Entry.previewEntries))
 }
-

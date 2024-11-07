@@ -12,7 +12,7 @@ struct EntryListItemView: View {
     var entry: Entry
     var title = "Title"
     var date = "Subtitle"
-    var vibe = "arrow.2.circlepath.circle"
+    var vibe: VibeImages
 
     init(entry: Entry) {
         self.entry = entry
@@ -23,22 +23,24 @@ struct EntryListItemView: View {
 
     var body: some View {
         HStack(alignment: .center, spacing: 0) {
+            VStack(alignment: .leading) {
+                Text(title)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+
+                Spacer()
+
+                Text(date)
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .foregroundStyle(.white)
+            .padding(.horizontal, 15)
+            .padding(.vertical, 10)
+
             ZStack(alignment: .trailing) {
-                VStack(alignment: .leading) {
-                    Text(title)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                    Text(date)
-                        .font(.headline)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .foregroundStyle(.white)
-                .padding(.horizontal, 15)
-                .padding(.vertical, 10)
-
-
                 VibeImageView(vibe: vibe)
                     .padding(.top, -20)
                     .padding(.trailing, 10)
@@ -49,5 +51,5 @@ struct EntryListItemView: View {
 }
 
 #Preview {
-    EntryListItemView(entry: Entry.previewEntries[0])
+    EntryListItemView(entry: Entry.previewEntries[3])
 }

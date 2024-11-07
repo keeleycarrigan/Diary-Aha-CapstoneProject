@@ -112,6 +112,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 269243012CB1C14400BCECA7 /* Build configuration list for PBXNativeTarget "DiaryAha" */;
 			buildPhases = (
+				263D54E02CCF237200215EB3 /* Swiftlint */,
 				269242D72CB1C14200BCECA7 /* Sources */,
 				269242D82CB1C14200BCECA7 /* Frameworks */,
 				269242D92CB1C14200BCECA7 /* Resources */,
@@ -243,6 +244,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		263D54E02CCF237200215EB3 /* Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"",
+			);
+			name = Swiftlint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\n\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		269242D72CB1C14200BCECA7 /* Sources */ = {
@@ -408,9 +431,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"DiaryAha/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"DiaryAha/PreviewContent\"";
 				DEVELOPMENT_TEAM = 3VW6TFQ2X2;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DiaryAha/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Diary Aha!";
@@ -438,9 +462,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"DiaryAha/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"DiaryAha/PreviewContent\"";
 				DEVELOPMENT_TEAM = 3VW6TFQ2X2;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DiaryAha/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Diary Aha!";

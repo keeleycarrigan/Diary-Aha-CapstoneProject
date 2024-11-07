@@ -9,10 +9,10 @@ import SwiftUI
 
 struct VibeImageView: View {
     let imageSize: CGFloat = 75.0
-    var vibe: String
+    var vibe: VibeImages
 
     var body: some View {
-        Image(systemName: vibe)
+        Image(vibe.id)
             .resizable()
             .scaledToFit()
             .frame(width: imageSize, height: imageSize)
@@ -22,5 +22,5 @@ struct VibeImageView: View {
 }
 
 #Preview {
-    VibeImageView(vibe: "arrow.up")
+    VibeImageView(vibe: VibeImages.happy)
 }
