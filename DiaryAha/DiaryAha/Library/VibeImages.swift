@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum VibeImages: String, CaseIterable, Identifiable {
+enum VibeImages: String, CaseIterable, Identifiable, Codable {
     case angry = "AngryVibe"
     case anxious = "AnxiousVibe"
     case happy = "HappyVibe"

@@ -6,14 +6,23 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension Entry {
+    static var photo = {
+        if let image = UIImage(named: "EntryPhoto1") {
+            return image.pngData()
+        }
+        return nil
+    }
+
     static var previewEntries: [Entry] = [
         Entry(
             title: "First Entry",
             body: "Body",
             date: Date(month: 10, day: 17, year: 2024),
-            vibe: VibeImages.happy
+            vibe: VibeImages.happy,
+            photos: [photo()!]
         ),
         Entry(
             title: "Godzilla Attacked!",

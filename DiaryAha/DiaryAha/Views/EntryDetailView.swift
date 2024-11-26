@@ -11,25 +11,30 @@ struct EntryDetailView: View {
     var entry: Entry
 
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack(alignment: .bottom) {
-                Text(entry.title)
-                    .font(.title)
-                    .fontWeight(.heavy)
+        VStack(spacing: 0) {
+            EntryPhotoCarousel(entryPhotos: entry.photos, viewerHeight: 200)
+                .padding(.bottom, entry.hasPhotos ? -20 : 0)
+
+            VStack(alignment: .leading, spacing: 0) {
+
+                HStack(alignment: .bottom) {
+                    Text(entry.title)
+                        .font(.title)
+                        .fontWeight(.heavy)
+                    Spacer()
+                    VibeImageView(vibe: entry.vibe)
+                }
+                .foregroundStyle(Color.mainColor)
+                .padding(.bottom, 15)
+
+                Text(entry.body)
+                    .font(.system(size: 20, weight: .regular))
+                    .foregroundStyle(Color.secondaryColor)
+
                 Spacer()
-                VibeImageView(vibe: entry.vibe)
             }
-            .foregroundStyle(Color.mainColor)
-            .padding(.top, 24)
-            .padding(.bottom, 16)
-
-            Text(entry.body)
-                .font(.system(size: 18, weight: .regular))
-                .foregroundStyle(Color.secondaryColor)
-
-            Spacer()
+            .padding(.horizontal, 15)
         }
-        .padding(.horizontal, 16)
         .background(Color.backgroundColor)
     }
 }
