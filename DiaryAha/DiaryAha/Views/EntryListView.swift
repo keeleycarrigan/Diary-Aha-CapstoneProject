@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct EntryListView: View {
-    @EnvironmentObject var entriesController: EntriesController
+    @Environment(\.modelContext) var modelContext
+    @Query(sort: \Entry.date, order: .reverse) var entries: [Entry]
+
     let entryColumns = Array(repeating: GridItem(.flexible(), spacing: 10.0), count: 1)
 
     init() {
@@ -21,13 +24,11 @@ struct EntryListView: View {
             ScrollView(.vertical) {
                 LazyVGrid(columns: entryColumns, spacing: 20) {
 
-                    ForEach(entriesController.entries) { entry in
+                    ForEach(entries) { entry in
                         NavigationLink {
                             EntryDetailView(entry: entry)
                         } label: {
                             EntryListItemView(entry: entry)
-                                .padding(.top, 20)
-                                .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
                         }
                     }
                 }
@@ -40,11 +41,14 @@ struct EntryListView: View {
             }
         }
         .tint(Color.secondaryColor)
-
     }
 }
 
 #Preview {
-    EntryListView()
-        .environmentObject(EntriesController(Entry.previewEntries))
+    let preview = Previewer()
+
+    preview.addExamples(Entry.previewEntries)
+
+    return EntryListView()
+        .modelContainer(preview.modelContainer)
 }

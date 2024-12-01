@@ -34,7 +34,7 @@ struct VibeSelector: View {
 
                 }
             }
-
+            .padding(.horizontal, 5)
         }
     }
 }

@@ -6,42 +6,61 @@
 //
 
 import Foundation
-import SwiftUI
+import SwiftData
 
-protocol MediaFile: Identifiable, Hashable {
-    associatedtype MediaType: Hashable
+@Model
+final class Entry: Codable, Hashable {
+    enum CodingKeys: CodingKey {
+        case id
+        case title
+        case body
+        case date
+        case vibe
+        case photos
+        case hasPhotos
+    }
 
-    var displayName: String { get }
-    var mediaFile: MediaType { get }
-}
-
-struct Entry: Identifiable, Equatable {
-    let id: UUID = .init()
+    var id: UUID
     var title: String
     var body: String
     var date: Date
     var vibe: VibeImages
-    var photos: [PhotoMedia] = []
-}
+    var hasPhotos: Bool { !photos.isEmpty }
 
-extension Entry {
-    struct PhotoMedia: MediaFile, Transferable {
-        let id = UUID()
-        let displayName: String
-        let mediaFile: UIImage
+    @Attribute(.externalStorage)
+    var photos: [Data]
 
-        var mediaImage: Image {
-            Image(uiImage: mediaFile)
-        }
-
-        static var transferRepresentation: some TransferRepresentation {
-            DataRepresentation(exportedContentType: .image) { (photo: PhotoMedia) -> Data in
-                guard let imageData = photo.mediaFile.pngData() else {
-                    throw EntryErrors.invalidImage
-                }
-                return imageData
-            }
-        }
+    init(title: String, body: String, date: Date, vibe: VibeImages, photos: [Data] = []) {
+        self.id = UUID()
+        self.title = title
+        self.body = body
+        self.date = date
+        self.vibe = vibe
+        self.photos = photos
     }
 
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try container.decode(UUID.self, forKey: .id)
+        title = try container.decode(String.self, forKey: .title)
+        body = try container.decode(String.self, forKey: .body)
+        date = try container.decode(Date.self, forKey: .date)
+        vibe = try container.decode(VibeImages.self, forKey: .vibe)
+        photos = try container.decode([Data].self, forKey: .photos)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(id, forKey: .id)
+        try container.encode(title, forKey: .title)
+        try container.encode(body, forKey: .body)
+        try container.encode(date, forKey: .date)
+        try container.encode(vibe, forKey: .vibe)
+
+        if !photos.isEmpty {
+            try container.encode(photos, forKey: .photos)
+        }
+    }
 }

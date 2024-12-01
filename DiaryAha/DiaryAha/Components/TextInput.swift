@@ -21,11 +21,12 @@ struct TextInput: View {
     var body: some View {
         TextField(title, text: text, axis: axis)
             .padding(10)
+            .foregroundStyle(Color.dripCoffee)
             .background(Color.white)
-            .cornerRadius(5)
             .overlay(Divider()
-                .frame(maxWidth: .infinity, maxHeight: 5)
+                .frame(maxWidth: .infinity, maxHeight: 3)
                 .background(Color.mainColor), alignment: .bottom)
+            .cornerRadius(5)
     }
 }
 

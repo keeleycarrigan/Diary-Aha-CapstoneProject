@@ -13,43 +13,76 @@ struct EntryListItemView: View {
     var title = "Title"
     var date = "Subtitle"
     var vibe: VibeImages
+    var photo: Image?
+    var hasPhotos: Bool { !entry.photos.isEmpty }
 
     init(entry: Entry) {
         self.entry = entry
         self.title = entry.title
         self.date = entry.date.formatted(date: .abbreviated, time: .omitted)
         self.vibe = entry.vibe
+
+        if hasPhotos {
+            self.photo = Image(uiImage: UIImage(data: entry.photos[0])!)
+        }
     }
 
     var body: some View {
-        HStack(alignment: .center, spacing: 0) {
-            VStack(alignment: .leading) {
-                Text(title)
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .lineLimit(1)
-                    .truncationMode(.tail)
+        VStack(spacing: 0) {
+            TabView {
+                self.photo?
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            }
+            .frame(maxHeight: hasPhotos ? 100 : 0)
+            .aspectRatio(contentMode: .fill)
+            .cornerRadius(5, corners: [.topLeft, .topRight])
+            .padding(.bottom, -5)
+            .tabViewStyle(.page)
+            .indexViewStyle(.page(backgroundDisplayMode: .automatic))
+
+            HStack(alignment: .center, spacing: 0) {
+                VStack(alignment: .leading) {
+                    Text(title)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+
+                    Spacer()
+
+                    Text(date)
+                        .font(.headline)
+                }
+                .foregroundStyle(.white)
+                .padding(.horizontal, 15)
+                .padding(.vertical, 10)
 
                 Spacer()
 
-                Text(date)
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                ZStack {
+                    VibeImageView(vibe: vibe)
+                        .padding(.top, -20)
+                        .padding(.trailing, 10)
+                }
             }
-            .foregroundStyle(.white)
-            .padding(.horizontal, 15)
-            .padding(.vertical, 10)
-
-            ZStack(alignment: .trailing) {
-                VibeImageView(vibe: vibe)
-                    .padding(.top, -20)
-                    .padding(.trailing, 10)
+            .background {
+                RoundedRectangle(cornerSize: .init(width: 5, height: 5))
+                    .fill(Color.mainColor)
             }
         }
-        .background(Color.mainColor)
+        .padding(.top, hasPhotos ? 0 : 10)
     }
 }
 
 #Preview {
-    EntryListItemView(entry: Entry.previewEntries[3])
+    ScrollView(.vertical) {
+        VStack(alignment: .center) {
+            EntryListItemView(entry: Entry.previewEntries[0])
+                .padding(.top, 20)
+            EntryListItemView(entry: Entry.previewEntries[3])
+                .padding(.top, 20)
+        }
+    }
+    .padding(.horizontal, 10)
 }
