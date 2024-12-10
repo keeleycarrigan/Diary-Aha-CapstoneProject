@@ -8,14 +8,18 @@
 import SwiftUI
 
 struct VibeSelector: View {
-    let vibeRows = Array(repeating: GridItem(.flexible(minimum: 75, maximum: 85), spacing: 10), count: 1)
+    let vibeRows: [GridItem]
     let onTap: (VibeImages) -> Void
 
     @Binding var selectedVibe: VibeImages
 
     init(selectedVibe: Binding<VibeImages>, onTap: @escaping (VibeImages) -> Void) {
+        let selectedImageSize = Constants.UI.imageSize + 10.0
+        let gridItem = GridItem(.flexible(minimum: Constants.UI.imageSize, maximum: selectedImageSize), spacing: 10)
+
         _selectedVibe = selectedVibe
         self.onTap = onTap
+        self.vibeRows = Array(repeating: gridItem, count: 1)
     }
 
     var body: some View {

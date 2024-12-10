@@ -12,6 +12,7 @@ import Observation
 @Observable
 final class NavigationController: ObservableObject {
     var navigationPath: [NavigationDestination] = []
+    var showNewEntry: Bool = false
 
     func navigateToRoot() {
         navigationPath.removeAll()

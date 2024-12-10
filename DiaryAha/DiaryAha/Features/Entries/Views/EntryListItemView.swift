@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct EntryListItemView: View {
-    let imageSize: CGFloat = 75.0
     var entry: Entry
     var title = "Title"
     var date = ""

@@ -12,10 +12,12 @@ import Observation
 @Observable
 final class AppController: ObservableObject {
     var entryIdeas: [String] = []
+    var activeEntry: Entry?
+    var hasActiveEntry: Bool { activeEntry != nil }
 
     func getIdeas(_ then: @escaping (String) -> Void) async throws {
         if (entryIdeas.isEmpty) {
-            guard let url = URL(string: Constants.getTopicsURL) else {
+            guard let url = URL(string: "\(Constants.API.baseURL)\(Constants.API.topicsEndpoint)") else {
                 return print("Invalid URL")
             }
 

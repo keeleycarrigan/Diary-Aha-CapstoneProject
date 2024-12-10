@@ -8,14 +8,13 @@
 import SwiftUI
 
 struct VibeImageView: View {
-    let imageSize: CGFloat = 75.0
     var vibe: VibeImages
 
     var body: some View {
         Image(vibe.id)
             .resizable()
             .scaledToFit()
-            .frame(width: imageSize, height: imageSize)
+            .frame(width: Constants.UI.imageSize, height: Constants.UI.imageSize)
             .background(.gray)
             .cornerRadius(5)
     }

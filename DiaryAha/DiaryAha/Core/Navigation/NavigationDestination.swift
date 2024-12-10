@@ -8,5 +8,6 @@
 import SwiftUI
 
 enum NavigationDestination: Hashable {
+    case entryList
     case entryDetail(Entry)
 }
