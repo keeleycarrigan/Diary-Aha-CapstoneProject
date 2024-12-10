@@ -20,7 +20,9 @@ struct EntryDatePicker: View {
     var body: some View {
         DatePicker("", selection: $entryDate, displayedComponents: [.date])
             .datePickerStyle(GraphicalDatePickerStyle())
-            .zIndex(-1)
+            .labelsHidden()
+            .frame(maxHeight: .infinity)
+            .clipped()
             .onChange(of: entryDate) {
                 onChangeDate()
             }
