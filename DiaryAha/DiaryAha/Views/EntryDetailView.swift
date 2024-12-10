@@ -17,7 +17,7 @@ struct EntryDetailView: View {
 
             VStack(alignment: .leading, spacing: 0) {
 
-                HStack(alignment: .bottom) {
+                HStack(alignment: .bottom, spacing: 0) {
                     Text(entry.title)
                         .font(.title)
                         .fontWeight(.heavy)
@@ -25,7 +25,12 @@ struct EntryDetailView: View {
                     VibeImageView(vibe: entry.vibe)
                 }
                 .foregroundStyle(Color.mainColor)
-                .padding(.bottom, 15)
+
+                Text(entry.date.entryFormat())
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundStyle(Color.secondaryColor)
+                    .padding(.bottom, 20)
 
                 Text(entry.body)
                     .font(.system(size: 20, weight: .regular))

@@ -11,7 +11,7 @@ struct EntryListItemView: View {
     let imageSize: CGFloat = 75.0
     var entry: Entry
     var title = "Title"
-    var date = "Subtitle"
+    var date = ""
     var vibe: VibeImages
     var photo: Image?
     var hasPhotos: Bool { !entry.photos.isEmpty }
@@ -19,7 +19,7 @@ struct EntryListItemView: View {
     init(entry: Entry) {
         self.entry = entry
         self.title = entry.title
-        self.date = entry.date.formatted(date: .abbreviated, time: .omitted)
+        self.date = entry.date.entryFormat()
         self.vibe = entry.vibe
 
         if hasPhotos {

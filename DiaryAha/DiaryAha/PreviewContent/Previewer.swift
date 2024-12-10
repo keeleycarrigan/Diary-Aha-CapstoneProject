@@ -6,9 +6,12 @@
 //
 
 import Foundation
+import SwiftUI
 import SwiftData
 
 struct Previewer {
+    @StateObject var navigationController = NavigationController()
+    @StateObject var appController = AppController()
     let modelContainer: ModelContainer
 
     init() {

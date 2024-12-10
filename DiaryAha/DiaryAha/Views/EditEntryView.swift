@@ -12,40 +12,21 @@ import SwiftData
 struct EditEntryView: View {
     @Environment(\.modelContext) var modelContext
 
+    private let maxDatePickerHeight = 400.0
+
     @Binding var showNewEntry: Bool
+    @Binding var activeEntry: Entry?
     @State private var pickedPhotos = [PhotosPickerItem]()
     @State private var entryPhotos = [Data]()
+    @State private var entryDate: Date = Date()
     @State private var entryTitle = ""
     @State private var entryBody = ""
     @State private var entryVibe: VibeImages = .happy
     @State private var entryIdeas: [String] = []
+    @State private var pickerHeight: CGFloat = 0
 
     func onTapVibe(vibe: VibeImages) {
         entryVibe = vibe
-    }
-
-    func getIdeas() {
-        guard let url = URL(string: Constants.getTopicsURL) else {
-            return print("Invalid URL")
-        }
-
-        var request = URLRequest(url: url)
-
-        request.httpMethod = "GET"
-
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { data, response, error in
-            guard let data else { return }
-
-            do {
-                let response = try JSONDecoder().decode(TopicIdeas.self, from: data)
-                entryIdeas = response.body
-            } catch {
-                print(error)
-            }
-        }
-
-        task.resume()
     }
 
     var body: some View {
@@ -56,6 +37,34 @@ struct EditEntryView: View {
                     .frame(height: 100)
 
                 GetIdeasView()
+
+                HStack(spacing: 0) {
+                    Spacer()
+
+                    Text(entryDate.entryFormat())
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                        .foregroundColor(Color.mainColor)
+                        .onTapGesture {
+                            withAnimation(.easeOut(duration: 0.5)) {
+                                if (pickerHeight == maxDatePickerHeight) {
+                                    pickerHeight = 0.0
+                                } else {
+                                    pickerHeight = maxDatePickerHeight
+                                }
+                            }
+                        }
+                }
+
+                EntryDatePicker(entryDate: $entryDate) {
+                    withAnimation(.easeOut(duration: 0.5)) {
+                        pickerHeight = 0.0
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: pickerHeight)
+                .padding(0)
+                .clipped()
+                .allowsHitTesting(pickerHeight > 0.0)
 
                 TextInput("Title", text: $entryTitle)
 
@@ -90,15 +99,23 @@ struct EditEntryView: View {
                 }
 
                 WideButton("Save") {
-                    let newEntry = Entry(
-                        title: entryTitle,
-                        body: entryBody,
-                        date: Date(),
-                        vibe: entryVibe,
-                        photos: entryPhotos
-                    )
+                    if let entry = activeEntry {
+                        entry.title = entryTitle
+                        entry.body = entryBody
+                        entry.vibe = entryVibe
+                        entry.date = entryDate
+                        entry.photos = entryPhotos
+                    } else {
+                        let newEntry = Entry(
+                            title: entryTitle,
+                            body: entryBody,
+                            date: entryDate,
+                            vibe: entryVibe,
+                            photos: entryPhotos
+                        )
 
-                    modelContext.insert(newEntry)
+                        modelContext.insert(newEntry)
+                    }
                     showNewEntry = false
                 }
             }
@@ -107,12 +124,26 @@ struct EditEntryView: View {
             .padding(.top, 10)
             .background(Color.backgroundColor)
         }
+        .onAppear {
+            if let entry = activeEntry {
+                entryTitle = entry.title
+                entryBody = entry.body
+                entryVibe = entry.vibe
+                entryPhotos = entry.photos
+                entryDate = entry.date
+            }
+        }
+        .onDisappear {
+            activeEntry = nil
+        }
     }
 }
 
 #Preview {
     @Previewable @State var showNewEntry: Bool = false
+    @Previewable @State var entry: Entry?
     let preview = Previewer()
 
-    EditEntryView(showNewEntry: $showNewEntry).modelContainer(preview.modelContainer)
+    EditEntryView(showNewEntry: $showNewEntry, activeEntry: $entry)
+        .modelContainer(preview.modelContainer)
 }

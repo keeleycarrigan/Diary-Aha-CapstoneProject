@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddEntryButtonView: View {
-    @State private var showNewEntry: Bool = false
+    @Binding var showNewEntry: Bool
 
     var body: some View {
         Button {
@@ -27,12 +27,11 @@ struct AddEntryButtonView: View {
         .buttonBorderShape(.circle)
         .foregroundStyle(.white)
         .background(Color.freshBlue, in: .circle)
-        .sheet(isPresented: $showNewEntry) {
-            EditEntryView(showNewEntry: $showNewEntry)
-        }
     }
 }
 
 #Preview {
-    AddEntryButtonView()
+    @Previewable @State var showNewEntry: Bool = false
+
+    AddEntryButtonView(showNewEntry: $showNewEntry)
 }
