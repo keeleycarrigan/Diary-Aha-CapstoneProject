@@ -15,3 +15,9 @@ extension Date {
         self = formatter.date(from: "\(month)-\(day)-\(year)") ?? Date()
     }
 }
+
+extension Date {
+    func entryFormat () -> String {
+        self.formatted(date: .abbreviated, time: .omitted)
+    }
+}

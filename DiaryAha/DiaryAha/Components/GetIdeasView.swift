@@ -8,54 +8,42 @@
 import SwiftUI
 
 struct GetIdeasView: View {
+    @EnvironmentObject var appController: AppController
+
     let backgroundColors = [
         Color.barberry,
         Color.freshBlue,
         Color.orangePop
     ]
 
-    @State private var entryIdeas: [String] = []
     @State private var idea = ""
     @State private var backgroundColor: Color = .clear
 
-    func getIdeas() {
-        if (entryIdeas.isEmpty) {
-            guard let url = URL(string: Constants.getTopicsURL) else {
-                return print("Invalid URL")
-            }
-
-            var request = URLRequest(url: url)
-
-            request.httpMethod = "GET"
-
-            let session = URLSession.shared
-            let task = session.dataTask(with: request) { data, response, error in
-                guard let data else { return }
-
-                do {
-                    let response = try JSONDecoder().decode(TopicIdeas.self, from: data)
-                    entryIdeas = response.body
-                    idea = response.body.randomElement() ?? ""
-                } catch {
-                    print(error)
+    func getIdeas() async {
+        do {
+            try await appController.getIdeas { idea in
+                if !idea.isEmpty {
+                    self.idea = idea
+                    backgroundColor = backgroundColors.randomElement() ?? .clear
                 }
             }
-
-            task.resume()
-        } else {
-            idea = entryIdeas.randomElement() ?? ""
+        } catch {
+            self.idea = "Error: \(error)"
         }
 
-        backgroundColor = backgroundColors.randomElement() ?? .clear
     }
 
     var body: some View {
         HStack(alignment: .top) {
             Text(idea)
-                .foregroundColor(entryIdeas.isEmpty ? Color.accentColor : .white)
-            Button(action: getIdeas) {
-                LabelView(entryIdeas: entryIdeas)
-            }
+                .foregroundColor(appController.entryIdeas.isEmpty ? Color.accentColor : .white)
+            Button(action: {
+                Task {
+                    await getIdeas()
+                }
+            }, label: {
+                LabelView(showIdea: !appController.entryIdeas.isEmpty)
+            })
         }
         .padding(15)
         .frame(maxWidth: .infinity)
@@ -66,26 +54,29 @@ struct GetIdeasView: View {
 
 extension GetIdeasView {
     struct LabelView: View {
-        var entryIdeas: [String] = []
+        var showIdea: Bool
 
         var body: some View {
             HStack {
-                Text(entryIdeas.isEmpty ? "Get Ideas" : "")
+                Text(showIdea ? "" : "Get Ideas")
                     .font(.title3)
 
-                Image(systemName: entryIdeas.isEmpty ? "brain" : "arrow.2.circlepath.circle")
+                Image(systemName: showIdea ? "arrow.2.circlepath.circle" : "brain")
                     .symbolRenderingMode(.monochrome)
                     .symbolVariant(.fill)
                     .font(.title2)
                     .symbolEffect(.appear, isActive: false)
             }
             .fontWeight(.medium)
-            .foregroundColor(entryIdeas.isEmpty ? Color.accentColor : .white)
+            .foregroundColor(showIdea ? .white : .accentColor)
         }
     }
 }
 
 #Preview {
+    var appController = AppController()
+
     GetIdeasView()
+        .environmentObject(appController)
         .background(Color.backgroundColor)
 }
