@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AddEntryButtonView: View {
+struct AddEntryButton: View {
     @Binding var showNewEntry: Bool
 
     var body: some View {
@@ -33,5 +33,5 @@ struct AddEntryButtonView: View {
 #Preview {
     @Previewable @State var showNewEntry: Bool = false
 
-    AddEntryButtonView(showNewEntry: $showNewEntry)
+    AddEntryButton(showNewEntry: $showNewEntry)
 }

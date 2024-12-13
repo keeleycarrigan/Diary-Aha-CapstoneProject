@@ -11,7 +11,9 @@ import SwiftData
 
 struct Previewer {
     @StateObject var navigationController = NavigationController()
-    @StateObject var appController = AppController()
+    @StateObject var ideasController = IdeasController()
+    @StateObject var entryController = EntryController()
+    @StateObject var onboardingController = OnboardingController()
     let modelContainer: ModelContainer
 
     init() {

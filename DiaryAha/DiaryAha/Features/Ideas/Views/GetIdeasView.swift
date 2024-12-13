@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GetIdeasView: View {
-    @EnvironmentObject var appController: AppController
+    @EnvironmentObject var entryController: IdeasController
 
     let backgroundColors = [
         Color.barberry,
@@ -17,11 +17,11 @@ struct GetIdeasView: View {
     ]
 
     @State private var idea = ""
-    @State private var backgroundColor: Color = .clear
+    @State private var backgroundColor: Color = .pattyPan.mix(with: .white, by: 0.3)
 
     func getIdeas() async {
         do {
-            try await appController.getIdeas { idea in
+            try await entryController.getIdeas { idea in
                 if !idea.isEmpty {
                     self.idea = idea
                     backgroundColor = backgroundColors.randomElement() ?? .clear
@@ -36,13 +36,13 @@ struct GetIdeasView: View {
     var body: some View {
         HStack(alignment: .top) {
             Text(idea)
-                .foregroundColor(appController.entryIdeas.isEmpty ? Color.accentColor : .white)
+                .foregroundColor(entryController.entryIdeas.isEmpty ? Color.accentColor : .white)
             Button(action: {
                 Task {
                     await getIdeas()
                 }
             }, label: {
-                LabelView(showIdea: !appController.entryIdeas.isEmpty)
+                LabelView(showIdea: !entryController.entryIdeas.isEmpty)
             })
         }
         .padding(15)
@@ -74,9 +74,12 @@ extension GetIdeasView {
 }
 
 #Preview {
-    var appController = AppController()
+    let ideasController = IdeasController()
 
-    GetIdeasView()
-        .environmentObject(appController)
-        .background(Color.backgroundColor)
+    VStack {
+        GetIdeasView()
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(Color.backgroundColor)
+    .environmentObject(ideasController)
 }

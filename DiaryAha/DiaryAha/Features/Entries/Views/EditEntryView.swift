@@ -11,6 +11,7 @@ import SwiftData
 
 struct EditEntryView: View {
     @Environment(\.modelContext) var modelContext
+    @EnvironmentObject var entryController: EntryController
 
     private let maxDatePickerHeight = 400.0
 
@@ -23,7 +24,9 @@ struct EditEntryView: View {
     @State private var entryBody = ""
     @State private var entryVibe: VibeImages = .happy
     @State private var entryIdeas: [String] = []
-    @State private var pickerHeight: CGFloat = 0
+    @State private var pickerHeight: CGFloat = 0.0
+    @State private var showError = false
+    @State private var errorMessage = ""
 
     func onTapVibe(vibe: VibeImages) {
         entryVibe = vibe
@@ -37,10 +40,9 @@ struct EditEntryView: View {
                     .frame(height: 100)
 
                 GetIdeasView()
+                    .padding(.vertical, 15)
 
                 HStack(spacing: 0) {
-                    Spacer()
-
                     Text(entryDate.entryFormat())
                         .font(.title3)
                         .fontWeight(.semibold)
@@ -55,28 +57,28 @@ struct EditEntryView: View {
                             }
                         }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
 
-                EntryDatePicker(entryDate: $entryDate) {
-                    withAnimation(.easeOut(duration: 0.5)) {
-                        pickerHeight = 0.0
+                if pickerHeight > 0 {
+                    EntryDatePicker(entryDate: $entryDate) {
+                        withAnimation(.easeOut(duration: 0.5)) {
+                            pickerHeight = 0.0
+                        }
                     }
+                    .frame(height: pickerHeight)
                 }
-                .frame(maxWidth: .infinity, maxHeight: pickerHeight)
-                .padding(0)
-                .clipped()
-                .allowsHitTesting(pickerHeight > 0.0)
 
                 TextInput("Title", text: $entryTitle)
+                    .padding(.bottom, 5)
 
                 TextInput("Entry", text: $entryBody, axis: .vertical)
                     .lineLimit(10...15)
 
-                PhotosPicker("Select images", selection: $pickedPhotos, matching: .images)
+                PhotoPickerButton(pickedPhotos: $pickedPhotos)
 
                 EntryPhotoCarousel(entryPhotos: entryPhotos, viewerHeight: 200)
                     .cornerRadius(5)
 
-                Spacer()
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 0)
@@ -99,13 +101,7 @@ struct EditEntryView: View {
                 }
 
                 WideButton("Save") {
-                    if let entry = activeEntry {
-                        entry.title = entryTitle
-                        entry.body = entryBody
-                        entry.vibe = entryVibe
-                        entry.date = entryDate
-                        entry.photos = entryPhotos
-                    } else {
+                    do {
                         let newEntry = Entry(
                             title: entryTitle,
                             body: entryBody,
@@ -114,15 +110,26 @@ struct EditEntryView: View {
                             photos: entryPhotos
                         )
 
-                        modelContext.insert(newEntry)
+                        try self.entryController.saveEntry(
+                            modelContext: modelContext,
+                            entry: newEntry
+                        )
+                        showNewEntry = false
+                    } catch {
+                        errorMessage = error.localizedDescription
+                        showError = true
                     }
-                    showNewEntry = false
                 }
             }
             .padding(.horizontal, 10)
             .padding(.bottom, 20)
             .padding(.top, 10)
             .background(Color.backgroundColor)
+            .alert("Error", isPresented: $showError) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(errorMessage)
+            }
         }
         .onAppear {
             if let entry = activeEntry {
@@ -146,4 +153,6 @@ struct EditEntryView: View {
 
     EditEntryView(showNewEntry: $showNewEntry, activeEntry: $entry)
         .modelContainer(preview.modelContainer)
+        .environmentObject(preview.entryController)
+        .environmentObject(preview.ideasController)
 }
